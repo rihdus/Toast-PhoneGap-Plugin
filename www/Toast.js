@@ -3,10 +3,17 @@ function Toast() {
 
 Toast.prototype.optionsBuilder = function () {
 
-  // defaults
+  /**
+   * Default values for toast object
+   * */
+  var defaults = {
+    DURATION: "short",
+    POSITION: "center"
+  };
+
   var message = null;
-  var duration = "short";
-  var position = "center";
+  var duration = defaults.DURATION + ""; // clone value only
+  var position = defaults.POSITION + ""; //
 
   return {
     withMessage: function(m) {
@@ -27,13 +34,42 @@ Toast.prototype.optionsBuilder = function () {
     build: function() {
       return {
         message: message,
-        duration: duration,
-        position: position
+        duration: duration || defaults.DURATION,
+        position: position || defaults.POSITION
       }
     }
   }
 };
 
+/**
+ * Toast.POSITION
+ *    defines the default toast position.
+ *
+ *    Allowed string values:
+ *      - "top"
+ *      - "center"
+ *      - "bottom"
+ * */
+
+Toast.prototype.POSITION = {
+  TOP: "top",
+  CENTER: "center",
+  BOTTOM: "bottom"
+};
+
+/**
+ * Toast.DURATION:
+ *    defines the default toast duration
+ *
+ *    Allowed string values:
+ *      - "short"
+ *      - "long"
+ * */
+
+Toast.prototype.DURATION = {
+  SHORT: "short",
+  LONG: "long"
+};
 
 Toast.prototype.showWithOptions = function (options, successCallback, errorCallback) {
   cordova.exec(successCallback, errorCallback, "Toast", "show", [options]);
@@ -41,13 +77,13 @@ Toast.prototype.showWithOptions = function (options, successCallback, errorCallb
 
 Toast.prototype.show = function (message, duration, position, successCallback, errorCallback) {
   this.showWithOptions(
-      this.optionsBuilder()
-          .withMessage(message)
-          .withDuration(duration)
-          .withPosition(position)
-          .build(),
-      successCallback,
-      errorCallback);
+     this.optionsBuilder()
+        .withMessage(message)
+        .withDuration(duration)
+        .withPosition(position)
+        .build(),
+     successCallback,
+     errorCallback);
 };
 
 Toast.prototype.showShortTop = function (message, successCallback, errorCallback) {
